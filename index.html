@@ -1,0 +1,1557 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RUANG BK - 11</title>
+	
+	<link rel="icon" href="https://drive.google.com/thumbnail?id=1Z6g-sCdw-k7W8dnw12NeagPkroLlmk-L" type="image/png">
+    <link rel="shortcut icon" href="https://drive.google.com/thumbnail?id=1Z6g-sCdw-k7W8dnw12NeagPkroLlmk-L" type="image/png">
+	
+	<link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#8b5cf6">
+    <link rel="apple-touch-icon" href="https://drive.google.com/thumbnail?id=1Z6g-sCdw-k7W8dnw12NeagPkroLlmk-L">
+    
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Konfigurasi Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    colors: {
+                        brand: { light: '#a78bfa', DEFAULT: '#8b5cf6', dark: '#7c3aed' }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .fade-in { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Custom Scrollbar Global */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        /* Hide scrollbar for clean tabs on mobile */
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Tab Styling Desain Mewah */
+        .tab-active { background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%); color: #ffffff; box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.5); font-weight: 700; transform: translateY(-2px); border: 1px solid rgba(255,255,255,0.3); }
+        .tab-active img { filter: brightness(0) invert(1); drop-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        
+        .tab-inactive { color: #64748b; font-weight: 600; background: transparent; transition: all 0.3s ease; }
+        .tab-inactive:hover { color: #8b5cf6; background: rgba(139, 92, 246, 0.08); transform: translateY(-1px); }
+        .tab-inactive img { opacity: 0.5; filter: grayscale(100%); transition: all 0.3s ease; }
+        .tab-inactive:hover img { opacity: 1; filter: grayscale(0%); }
+
+        /* Internal Scroll untuk Grid yang tidak memanjang */
+        .grid-scroll-area { max-height: 55vh; overflow-y: auto; padding-right: 0.5rem; padding-bottom: 2rem; }
+        
+        /* Glassmorphism */
+        .glass-header { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(226, 232, 240, 0.8); }
+		
+		/* Memastikan tombol terasa halus saat digeser */
+        #fab-container { touch-action: none; user-select: none; }
+        .dragging { transition: none !important; }
+		
+		/* Pengunci Ikon Mata agar tidak membesar saat diklik */
+        #eye-icon { width: 16px !important; height: 16px !important; transition: none !important; object-fit: contain; }
+		
+		/* Animasi Running Text Mulus untuk Handphone */
+        .running-text-container { display: flex; overflow: hidden; white-space: nowrap; width: 100%; align-items: center; }
+        .running-text { display: inline-block; animation: scrollText 20s linear infinite; padding-left: 100%; }
+        @keyframes scrollText {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans overflow-hidden flex flex-col h-screen">
+
+    <!-- ========================================== -->
+    <!-- 1. HALAMAN LOGIN -->
+    <!-- ========================================== -->
+    <div id="login-view" class="h-screen w-screen flex items-center justify-center bg-slate-50 relative overflow-hidden z-50 p-4 md:p-8">
+        
+        <div class="absolute top-[-10%] left-[-10%] w-[30rem] h-[30rem] bg-brand/30 rounded-full blur-[100px] animate-pulse-slow"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[30rem] h-[30rem] bg-pink-500/20 rounded-full blur-[100px] animate-pulse-slow" style="animation-delay: 2s;"></div>
+
+        <div class="bg-white/70 backdrop-blur-2xl rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-white max-w-4xl w-full flex flex-col md:flex-row overflow-hidden fade-in relative z-10 min-h-[500px]">
+            
+            <button onclick="showModal('about-modal')" class="md:hidden absolute top-5 right-5 w-10 h-10 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center hover:bg-white hover:scale-110 shadow-sm z-20 border border-slate-100 transition-all">
+                <img src="https://cdn-icons-png.flaticon.com/128/3208/3208505.png" alt="Info" class="w-5 h-5 opacity-80">
+            </button>
+
+            <div class="hidden md:flex w-1/2 bg-gradient-to-br from-brand-dark via-brand to-pink-500 p-10 flex-col justify-center items-center text-white relative overflow-hidden text-center">
+                <div class="absolute top-0 left-0 w-full h-full bg-black/10 z-0"></div>
+                <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-white/20 rounded-full blur-2xl"></div>
+                <div class="absolute top-10 right-10 w-20 h-20 bg-white/20 rounded-full blur-xl"></div>
+                
+                <div class="relative z-10 w-full flex flex-col items-center">
+                    <img src="https://drive.google.com/thumbnail?id=1Z6g-sCdw-k7W8dnw12NeagPkroLlmk-L" alt="Logo SOBAT BK" class="w-32 h-32 object-cover shadow-2xl rounded-3xl bg-white p-1.5 mb-6 hover:scale-105 transition-transform duration-500">
+                    <h1 class="text-4xl font-black mb-2 drop-shadow-md tracking-tight">RUANG BK</h1>
+                    <p class="text-[10px] text-white/90 mb-6 font-bold tracking-widest uppercase bg-white/20 py-1.5 px-4 rounded-full backdrop-blur-sm shadow-sm border border-white/30">UPT SPF SMP NEGERI 11 MAKASSAR</p>
+                    <p class="text-sm text-white/90 leading-relaxed font-medium px-4">Sistem Online BK & Administrasi Terpadu. Ruang kerja digital cerdas untuk efisiensi layanan Bimbingan dan Konseling Anda.</p>
+                </div>
+                
+                <button onclick="showModal('about-modal')" class="relative z-10 mt-8 px-6 py-2.5 bg-white/20 hover:bg-white/30 border border-white/50 rounded-full text-xs font-bold backdrop-blur-sm transition-all hover:scale-105 flex items-center gap-2 shadow-lg">
+                    <img src="https://cdn-icons-png.flaticon.com/128/3208/3208505.png" alt="Info" class="w-4 h-4 brightness-0 invert"> Tentang Aplikasi
+                </button>
+            </div>
+
+            <div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-white/50">
+                
+                <div class="md:hidden flex flex-col items-center mb-6 mt-2">
+                    <img src="https://drive.google.com/thumbnail?id=1Z6g-sCdw-k7W8dnw12NeagPkroLlmk-L" alt="Logo Aplikasi" class="w-20 h-20 object-cover shadow-lg rounded-2xl bg-white p-1 mb-3">
+                    <h2 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-slate-800 to-slate-600 tracking-tight">RUANG BK</h2>
+                </div>
+
+                <div class="text-left mb-8 hidden md:block">
+                    <h2 class="text-3xl font-black text-slate-800 mb-2">Masuk Akun</h2>
+                    <p class="text-sm text-slate-500 font-medium">Silakan masukkan kredensial Anda sahabat.</p>
+                </div>
+
+                <form id="login-form" onsubmit="handleLogin(event)" class="space-y-5">
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1">Username Guru</label>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <img src="https://cdn-icons-png.flaticon.com/128/1077/1077063.png" alt="User" class="w-4 h-4 opacity-40 group-focus-within:opacity-100 group-focus-within:drop-shadow-[0_0_5px_rgba(139,92,246,0.5)] transition-all">
+                            </div>
+                            <input type="text" id="login-username" required class="w-full pl-11 pr-4 py-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-2 focus:ring-brand focus:border-transparent outline-none text-sm text-slate-700 shadow-sm transition-all" placeholder="Ketik username Anda...">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1">Password</label>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <img src="https://cdn-icons-png.flaticon.com/128/3064/3064155.png" alt="Lock" class="w-4 h-4 opacity-40 group-focus-within:opacity-100 group-focus-within:drop-shadow-[0_0_5px_rgba(139,92,246,0.5)] transition-all">
+                            </div>
+                            <input type="password" id="login-password" required class="w-full pl-11 pr-12 py-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-2 focus:ring-brand focus:border-transparent outline-none text-sm text-slate-700 shadow-sm transition-all" placeholder="••••••••">
+                            <button type="button" onclick="togglePassword('login-password', 'eye-icon')" class="absolute inset-y-0 right-0 pr-4 flex items-center opacity-40 hover:opacity-100 transition-opacity">
+                                <img id="eye-icon" src="https://cdn-icons-png.flaticon.com/128/2767/2767146.png" alt="Eye" class="w-4 h-4">
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full mt-2 py-4 bg-gradient-to-r from-brand to-pink-500 hover:from-brand-dark hover:to-pink-600 text-white rounded-2xl font-bold text-sm shadow-[0_10px_20px_-5px_rgba(139,92,246,0.4)] hover:shadow-[0_15px_25px_-5px_rgba(139,92,246,0.5)] hover:-translate-y-1 transition-all flex items-center justify-center gap-2">
+                        Masuk Ruang Kerja
+                        <img src="https://cdn-icons-png.flaticon.com/128/1828/1828395.png" alt="Login" class="w-4 h-4 brightness-0 invert">
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 2. DASHBOARD UTAMA -->
+    <!-- ========================================== -->
+    <div id="main-dashboard" class="hidden flex-1 flex flex-col relative w-full h-full overflow-hidden">
+        
+        <!-- HEADER Keren (Glassmorphism) -->
+        <header class="glass-header px-4 md:px-8 py-3 flex justify-between items-center z-20 sticky top-0">
+            <div class="flex items-center gap-3">
+                <!-- LOGO HEADER (Mengganti ikon lama) -->
+                <img src="https://drive.google.com/thumbnail?id=1Z6g-sCdw-k7W8dnw12NeagPkroLlmk-L" id="header-logo-img" alt="Logo" class="w-10 h-10 md:w-12 md:h-12 rounded-xl shadow-md cursor-pointer hover:scale-105 transition-transform object-cover bg-white p-1" onclick="showModal('about-modal')">
+                
+                <div>
+                    <h1 class="font-bold text-xl md:text-2xl text-slate-800 leading-tight tracking-tight">RUANG BK</h1>
+                    <!-- SLOGAN APLIKASI (Mengganti nama guru) -->
+                    <p class="text-[9px] md:text-[10px] font-bold text-transparent bg-clip-text bg-gradient-to-r from-brand to-pink-500 tracking-widest uppercase">Mappaguru Online</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-2 md:gap-4">
+                <div class="hidden md:block text-right cursor-pointer group" onclick="showProfil()">
+                    <p class="text-sm font-bold text-slate-800 group-hover:text-brand transition-colors" id="user-display-name">Memuat...</p>
+                    <p class="text-xs text-slate-500 group-hover:text-brand-light transition-colors"><i class="fa-solid fa-pen-to-square mr-1"></i>Profil Saya</p>
+                </div>
+                <div class="relative">
+                    <img src="https://ui-avatars.com/api/?name=User&background=8b5cf6&color=fff" id="user-avatar" onclick="showProfil()" class="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-brand cursor-pointer hover:scale-110 shadow-sm transition-transform object-cover" alt="Profil">
+                    <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
+                </div>
+                
+                <button onclick="logout()" class="ml-1 md:ml-3 w-10 h-10 md:w-11 md:h-11 rounded-full bg-slate-100 text-slate-500 hover:bg-red-500 hover:text-white transition-all shadow-sm flex items-center justify-center" title="Keluar">
+                    <i class="fa-solid fa-power-off text-lg"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- KONTEN UTAMA DENGAN SCROLL GLOBAL -->
+        <main class="flex-1 overflow-y-auto w-full bg-slate-50/50 relative">
+            
+            <!-- BANNER & DASHBOARD STATS -->
+            <div class="px-4 md:px-8 pt-6 pb-4 max-w-7xl mx-auto fade-in">
+                <div class="relative rounded-[2.5rem] overflow-hidden shadow-[0_20px_50px_rgba(139,92,246,0.15)] border border-white/60">
+                    
+                    <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-white/80 via-white/90 to-white/80 backdrop-blur-2xl z-0"></div>
+                    <div class="absolute -top-24 -left-24 w-96 h-96 bg-brand/20 rounded-full blur-3xl mix-blend-multiply animate-pulse-slow"></div>
+                    <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-pink-500/20 rounded-full blur-3xl mix-blend-multiply animate-pulse-slow" style="animation-delay: 2s;"></div>
+                    
+                    <div class="relative z-10 p-6 md:p-10">
+                        <div class="mb-8 text-center md:text-left">
+                             <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-light/10 border border-brand/20 mb-3 shadow-sm">
+                                <span class="relative flex h-2 w-2">
+                                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand opacity-75"></span>
+                                  <span class="relative inline-flex rounded-full h-2 w-2 bg-brand"></span>
+                                </span>
+                                <span class="text-[10px] md:text-xs font-bold text-brand uppercase tracking-wider">Ruang BK - Mappaguru Online</span>
+                            </div>
+                            <h2 class="text-3xl md:text-4xl font-extrabold text-slate-800 mb-3 leading-tight"><span id="ucapan-waktu">Selamat Datang</span>, <span id="banner-name" class="text-transparent bg-clip-text bg-gradient-to-r from-brand-dark via-brand to-pink-600 drop-shadow-sm">Sahabat</span>! 👋</h2>
+                            <p class="text-slate-500 text-sm md:text-base max-w-2xl leading-relaxed font-medium mx-auto md:mx-0">Selamat datang di Sistem Online BK & Administrasi Terpadu (RUANG BK). Pusat kendali digital Anda untuk mengelola layanan bimbingan, dokumentasi RPLBK, dan video pembelajaran secara efisien dan komprehensif.</p>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-4 md:gap-6">
+                            <div class="bg-white rounded-2xl md:rounded-3xl p-4 md:p-6 shadow-sm border border-slate-100 hover:-translate-y-1.5 hover:shadow-[0_10px_25px_-5px_rgba(139,92,246,0.3)] transition-all duration-300 group text-center">
+                                <div class="w-12 h-12 md:w-14 md:h-14 bg-purple-50 rounded-xl md:rounded-2xl mx-auto flex items-center justify-center mb-3 shadow-inner group-hover:scale-110 transition-transform">
+                                    <img src="https://cdn-icons-png.flaticon.com/128/2920/2920274.png" class="w-7 h-7 md:w-8 md:h-8 object-contain drop-shadow-sm" alt="App">
+                                </div>
+                                <h3 class="text-2xl md:text-4xl font-black text-slate-800 mb-1" id="stat-aplikasi">0</h3>
+                                <p class="text-[9px] md:text-[11px] font-bold text-slate-400 uppercase tracking-widest group-hover:text-brand transition-colors">Aplikasi</p>
+                            </div>
+
+                            <div class="bg-white rounded-2xl md:rounded-3xl p-4 md:p-6 shadow-sm border border-slate-100 hover:-translate-y-1.5 hover:shadow-[0_10px_25px_-5px_rgba(236,72,153,0.3)] transition-all duration-300 group text-center">
+                                <div class="w-12 h-12 md:w-14 md:h-14 bg-pink-50 rounded-xl md:rounded-2xl mx-auto flex items-center justify-center mb-3 shadow-inner group-hover:scale-110 transition-transform">
+                                    <img src="https://cdn-icons-png.flaticon.com/128/3362/3362004.png" class="w-7 h-7 md:w-8 md:h-8 object-contain drop-shadow-sm" alt="Media">
+                                </div>
+                                <h3 class="text-2xl md:text-4xl font-black text-slate-800 mb-1" id="stat-media">0</h3>
+                                <p class="text-[9px] md:text-[11px] font-bold text-slate-400 uppercase tracking-widest group-hover:text-pink-500 transition-colors">Media BK</p>
+                            </div>
+
+                            <div class="bg-white rounded-2xl md:rounded-3xl p-4 md:p-6 shadow-sm border border-slate-100 hover:-translate-y-1.5 hover:shadow-[0_10px_25px_-5px_rgba(239,68,68,0.3)] transition-all duration-300 group text-center">
+                                <div class="w-12 h-12 md:w-14 md:h-14 bg-red-50 rounded-xl md:rounded-2xl mx-auto flex items-center justify-center mb-3 shadow-inner group-hover:scale-110 transition-transform">
+                                    <img src="https://cdn-icons-png.flaticon.com/128/1384/1384060.png" class="w-7 h-7 md:w-8 md:h-8 object-contain drop-shadow-sm" alt="Video">
+                                </div>
+                                <h3 class="text-2xl md:text-4xl font-black text-slate-800 mb-1" id="stat-video">0</h3>
+                                <p class="text-[9px] md:text-[11px] font-bold text-slate-400 uppercase tracking-widest group-hover:text-red-500 transition-colors">Video Ajar</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+				
+				<div class="mt-8 mb-8 w-full max-w-3xl mx-auto px-1 fade-in">
+					<div class="relative group">
+						<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-brand transition-colors">
+							<i class="fa-solid fa-magnifying-glass"></i>
+						</div>
+						<input type="text" id="input-pencarian" onkeyup="filterPencarian()" class="w-full pl-11 pr-4 py-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-2 focus:ring-brand outline-none text-sm text-slate-700 shadow-sm transition-shadow" placeholder="Cari layanan aplikasi, materi rplbk, atau video di sini sahabat...">
+					</div>
+				</div>
+
+                <!-- NAVIGASI TAB PROFESIONAL (DITENGAH) -->
+                <div class="mb-8 overflow-x-auto scrollbar-hide flex justify-center w-full fade-in z-20 relative px-2">
+                    <div class="flex gap-2 p-2 bg-white/70 backdrop-blur-xl rounded-full border border-white/80 shadow-[0_8px_30px_rgb(0,0,0,0.06)] w-max">
+                        
+                        <button onclick="switchTab('aplikasi')" id="tab-aplikasi" class="px-6 py-3 rounded-full text-sm transition-all duration-300 tab-active flex items-center gap-2.5">
+                            <img src="https://cdn-icons-png.flaticon.com/128/2920/2920274.png" alt="Aplikasi" class="w-5 h-5 object-contain">
+                            Layanan Aplikasi
+                        </button>
+                        
+                        <button onclick="switchTab('media')" id="tab-media" class="px-6 py-3 rounded-full text-sm transition-all duration-300 tab-inactive flex items-center gap-2.5">
+                            <img src="https://cdn-icons-png.flaticon.com/128/3362/3362004.png" alt="Media" class="w-5 h-5 object-contain">
+                            Media dan RPLBK
+                        </button>
+                        
+                        <button onclick="switchTab('video')" id="tab-video" class="px-6 py-3 rounded-full text-sm transition-all duration-300 tab-inactive flex items-center gap-2.5">
+                            <img src="https://cdn-icons-png.flaticon.com/128/1384/1384060.png" alt="Video" class="w-5 h-5 object-contain">
+                            Video Pembelajaran
+                        </button>
+                        
+                    </div>
+                </div>
+
+                <!-- TAB 1: APLIKASI -->
+                <div id="content-aplikasi" class="fade-in block pb-10">
+                    <div class="flex justify-between items-center mb-4 px-1">
+                        <h2 class="text-xl font-bold text-slate-800">Aplikasi Mappaguru Online</h2>
+                        <button onclick="loadDataAplikasi()" class="text-xs font-semibold text-brand hover:text-brand-dark bg-brand-light/10 px-3 py-1.5 rounded-lg transition-colors"><i class="fa-solid fa-rotate-right mr-1"></i> Refresh</button>
+                    </div>
+                    <!-- Area Scroll Internal -->
+                    <div class="grid-scroll-area">
+                        <div id="grid-aplikasi" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                            <div class="col-span-full text-center py-10 text-slate-400"><i class="fa-solid fa-spinner fa-spin text-3xl mb-3"></i><p>Memuat layanan...</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 2: MEDIA AJAR -->
+                <div id="content-media" class="fade-in hidden pb-10">
+                    <div class="flex justify-between items-center mb-4 px-1">
+                        <h2 class="text-xl font-bold text-slate-800">Media BK dan RPLBK</h2>
+                        <button onclick="showModal('modal-upload-media')" class="bg-brand hover:bg-brand-dark text-white px-4 py-2 rounded-xl text-sm font-semibold shadow-md transition-all hover:-translate-y-0.5"><i class="fa-solid fa-cloud-arrow-up mr-2"></i>Upload Baru</button>
+                    </div>
+                    <!-- Area Scroll Internal -->
+                    <div class="grid-scroll-area">
+                        <div id="grid-media" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                            <div class="col-span-full text-center py-10 text-slate-400">Silakan muat data atau upload media baru.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 3: VIDEO YOUTUBE -->
+                <div id="content-video" class="fade-in hidden pb-10">
+                    <div class="flex justify-between items-center mb-4 px-1">
+                        <h2 class="text-xl font-bold text-slate-800">Koleksi Video Ajar</h2>
+                        <button onclick="showModal('modal-tambah-video')" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl text-sm font-semibold shadow-md transition-all hover:-translate-y-0.5"><i class="fa-solid fa-plus mr-2"></i>Tambah Video</button>
+                    </div>
+                    <!-- Area Scroll Internal -->
+                    <div class="grid-scroll-area">
+                        <div id="grid-video" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                            <div class="col-span-full text-center py-10 text-slate-400">Belum ada video ditambahkan.</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <!-- FOOTER KEREN -->
+        <footer class="relative z-20 mt-auto fade-in">
+            <div class="h-1 w-full bg-gradient-to-r from-brand-light via-pink-500 to-brand-dark opacity-90 shadow-[0_0_10px_rgba(236,72,153,0.5)]"></div>
+            
+            <div class="bg-white/85 backdrop-blur-xl text-slate-600 py-4 md:py-5 px-6 text-center text-[10px] md:text-xs shadow-[0_-10px_30px_rgba(0,0,0,0.03)] border-t border-white">
+                <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-3">
+                    
+                    <div class="font-medium tracking-wide">
+						<div class="mb-1">
+							<span class="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-brand to-pink-600 text-xs md:text-sm drop-shadow-sm">
+								Muhammad Hasratul - Developer & Founder
+							</span>
+						</div>
+
+						<div class="opacity-70 text-xs md:text-sm">
+							&copy; <span id="year"></span> Mappaguru Online. Hak Cipta dilindungi undang-undang
+						</div>
+					</div>
+
+					<script>
+						document.getElementById("year").innerHTML = new Date().getFullYear();
+					</script>
+                    
+                    <div class="flex items-center justify-center font-medium bg-slate-50/80 px-4 py-2 rounded-full border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
+                        <span class="text-slate-500">Dibuat dengan</span> 
+                        <img src="https://cdn-icons-png.flaticon.com/128/833/833472.png" alt="Love" class="w-3.5 h-3.5 md:w-4 md:h-4 mx-2 animate-pulse drop-shadow-sm"> 
+                        <span class="text-slate-500">oleh</span>
+                        <span class="text-brand font-extrabold ml-1.5 drop-shadow-sm">Muhammad Hasratul</span>
+                    </div>
+                    
+                </div>
+            </div>
+        </footer>
+		
+		<div id="fab-container" class="fixed bottom-6 right-6 z-[45] flex flex-col items-end gap-3 fade-in">
+        
+        <div id="fab-menu" class="flex flex-col items-end gap-3 transition-all duration-300 transform scale-0 origin-bottom opacity-0 pointer-events-none">
+            <button onclick="showModal('modal-tambah-video'); toggleFab()" class="flex items-center gap-3 group">
+                <span class="bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl text-[11px] font-bold text-slate-600 shadow-md border border-white/50 opacity-0 group-hover:opacity-100 transition-opacity">Tambah Video</span>
+                <div class="w-12 h-12 bg-gradient-to-r from-red-500 to-red-600 rounded-full flex items-center justify-center shadow-lg border border-red-400">
+                    <img src="https://cdn-icons-png.flaticon.com/128/1384/1384060.png" class="w-5 h-5 brightness-0 invert">
+                </div>
+            </button>
+            <button onclick="showModal('modal-upload-media'); toggleFab()" class="flex items-center gap-3 group">
+                <span class="bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl text-[11px] font-bold text-slate-600 shadow-md border border-white/50 opacity-0 group-hover:opacity-100 transition-opacity">Upload Media</span>
+                <div class="w-12 h-12 bg-gradient-to-r from-brand to-pink-500 rounded-full flex items-center justify-center shadow-lg border border-pink-400">
+                    <img src="https://cdn-icons-png.flaticon.com/128/3134/3134070.png" class="w-5 h-5 brightness-0 invert">
+                </div>
+            </button>
+        </div>
+
+        <button id="fab-main" class="w-14 h-14 bg-slate-800 rounded-full flex items-center justify-center shadow-2xl border-2 border-slate-700 relative group cursor-move">
+            <div class="absolute inset-0 bg-gradient-to-tr from-brand to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity rounded-full"></div>
+            <img src="https://cdn-icons-png.flaticon.com/128/1828/1828819.png" id="fab-icon" class="w-6 h-6 brightness-0 invert transition-transform duration-300 relative z-10">
+        </button>
+    </div>
+		
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 3. TAMPILAN IFRAME (SATU PINTU) -->
+    <!-- ========================================== -->
+    <div id="iframe-view" class="hidden h-screen w-screen flex flex-col bg-slate-50 absolute inset-0 z-[100] overflow-hidden">
+        
+        <header class="bg-white/90 backdrop-blur-2xl border-b border-white shadow-[0_10px_30px_rgba(0,0,0,0.03)] px-4 py-3 flex items-center justify-between gap-4 z-20">
+            <button onclick="tutupIframe()" class="bg-slate-100 hover:bg-red-50 hover:text-red-500 text-slate-600 px-5 py-2.5 rounded-full transition-all duration-300 font-bold flex items-center gap-2.5 shadow-inner hover:shadow-md border border-slate-200 group">
+                <img src="https://cdn-icons-png.flaticon.com/128/271/271220.png" class="w-4 h-4 opacity-60 group-hover:opacity-100 transition-all" alt="Back"> 
+                <span class="hidden sm:inline">Tutup & Kembali</span>
+            </button>
+            
+            <div class="flex-1 overflow-hidden flex flex-col items-center justify-center text-center">
+                <h2 id="iframe-title" class="text-lg md:text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-brand-dark to-pink-600 line-clamp-1 drop-shadow-sm">Memuat...</h2>
+            </div>
+
+            <div class="w-[140px] hidden sm:block"></div>
+        </header>
+
+        <div class="bg-gradient-to-r from-slate-800 via-brand-dark to-slate-900 text-white text-[10px] md:text-xs font-bold shadow-inner flex items-center relative z-10 border-b border-brand-light/30 h-8 md:h-10 overflow-hidden">
+            
+            <div class="absolute left-0 top-0 bottom-0 px-3 md:px-4 bg-white/10 backdrop-blur-md flex items-center gap-2 border-r border-white/20 shadow-[5px_0_15px_rgba(0,0,0,0.3)] z-20 rounded-r-full">
+                <img src="https://cdn-icons-png.flaticon.com/128/10437/10437088.png" class="w-3.5 h-3.5 drop-shadow-sm" alt="Info"> 
+                <span class="text-brand-light drop-shadow-md tracking-wider">INFO</span>
+            </div>
+            
+            <div class="running-text-container">
+                <div class="running-text tracking-widest uppercase text-slate-200 drop-shadow-sm font-medium">
+                    ✨ SELAMAT BEKERJA SAHABAT! PASTIKAN KONEKSI INTERNET ANDA STABIL. DATA YANG DISIMPAN PADA APLIKASI AKAN OTOMATIS TERSINKRONISASI DENGAN SERVER GOOGLE. TETAP SEMANGAT DAN JAGA KESEHATAN... ✨
+                </div>
+            </div>
+            
+        </div>
+
+        <div class="flex-1 w-full relative bg-slate-100/50">
+            <div id="iframe-loader" class="absolute inset-0 flex flex-col items-center justify-center bg-white/80 backdrop-blur-lg z-10">
+                <div class="relative w-24 h-24 flex items-center justify-center mb-6">
+                    <div class="absolute inset-0 border-4 border-slate-100 rounded-full shadow-inner"></div>
+                    <div class="absolute inset-0 border-4 border-brand rounded-full border-t-transparent animate-spin shadow-[0_0_15px_rgba(139,92,246,0.5)]"></div>
+                    <img src="https://cdn-icons-png.flaticon.com/128/2920/2920274.png" class="w-10 h-10 animate-pulse drop-shadow-md" alt="Loading">
+                </div>
+                <p class="text-transparent bg-clip-text bg-gradient-to-r from-brand to-pink-500 font-black tracking-[0.2em] uppercase animate-pulse text-sm drop-shadow-sm">Menyiapkan Ruang Kerja...</p>
+            </div>
+            
+            <iframe id="main-iframe" allow="microphone" class="w-full h-full border-none opacity-0 transition-opacity duration-700 bg-white" onload="document.getElementById('iframe-loader').classList.add('hidden'); this.style.opacity='1';"></iframe>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL: POPUP DETAIL APLIKASI / MEDIA -->
+    <!-- ========================================== -->
+    <div id="modal-detail" class="fixed inset-0 z-[80] hidden bg-slate-900/60 backdrop-blur-md overflow-y-auto" onclick="if(event.target===this) closeModal('modal-detail')">
+        <div class="min-h-screen flex items-center justify-center p-4">
+            <div class="bg-white/95 backdrop-blur-2xl rounded-[2.5rem] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] border border-white/60 w-full max-w-sm md:max-w-md relative overflow-hidden fade-in flex flex-col text-center">
+                
+                <div class="relative bg-gradient-to-br from-slate-100 via-white to-brand-light/10 p-8 flex flex-col justify-center items-center overflow-hidden border-b border-slate-100/50">
+                    <div class="absolute inset-0 bg-brand/5 rounded-full blur-3xl scale-150"></div>
+                    
+                    <button onclick="closeModal('modal-detail')" class="absolute top-5 right-5 w-8 h-8 flex items-center justify-center bg-white/80 hover:bg-red-50 rounded-full shadow-sm hover:shadow-md hover:scale-110 hover:rotate-90 transition-all duration-300 z-10 border border-slate-100 group">
+                        <img src="https://cdn-icons-png.flaticon.com/128/1828/1828778.png" alt="Close" class="w-3 h-3 opacity-60 group-hover:opacity-100 transition-all">
+                    </button>
+                    
+                    <div id="detail-img-container" class="relative z-10 mt-4 mb-2 drop-shadow-[0_10px_15px_rgba(139,92,246,0.2)]">
+                        </div>
+                </div>
+                
+                <div class="p-8 md:p-10 flex flex-col bg-white">
+                    <h2 id="detail-title" class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-slate-800 to-slate-600 mb-3 leading-tight tracking-tight">Nama Layanan</h2>
+                    <p id="detail-desc" class="text-sm text-slate-500 leading-relaxed mb-8 font-medium">Deskripsi layanan akan muncul di sini secara rinci...</p>
+                    
+                    <button id="btn-open-detail" class="w-full py-4 rounded-2xl font-bold bg-gradient-to-r from-brand to-pink-500 hover:from-brand-dark hover:to-pink-600 text-white shadow-[0_10px_20px_-5px_rgba(139,92,246,0.4)] hover:shadow-[0_15px_25px_-5px_rgba(139,92,246,0.5)] hover:-translate-y-1 transition-all flex items-center justify-center gap-2.5">
+                        </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-profil" class="fixed inset-0 z-[70] hidden bg-slate-900/60 backdrop-blur-md overflow-y-auto" onclick="if(event.target===this) closeModal('modal-profil')">
+        <div class="min-h-screen flex items-center justify-center p-4">
+            <div class="bg-white/95 backdrop-blur-2xl rounded-[2.5rem] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] border border-white/60 w-full max-w-4xl relative overflow-hidden fade-in">
+                
+                <div class="bg-gradient-to-r from-brand-dark via-brand to-pink-500 p-6 md:p-8 text-white flex justify-between items-center relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-20 -mt-20"></div>
+                    <div class="relative z-10 flex items-center gap-4">
+                        <img src="https://cdn-icons-png.flaticon.com/128/3135/3135715.png" alt="Profile" class="w-8 h-8 md:w-10 md:h-10 brightness-0 invert drop-shadow-md">
+                        <h2 class="text-xl md:text-3xl font-black drop-shadow-sm tracking-tight">Profil Lengkap Guru</h2>
+                    </div>
+                    <button type="button" onclick="closeModal('modal-profil')" class="relative z-10 w-10 h-10 flex items-center justify-center bg-white/20 hover:bg-white/40 rounded-full transition-all hover:rotate-90 hover:scale-110 shadow-sm border border-white/30">
+                        <img src="https://cdn-icons-png.flaticon.com/128/1828/1828778.png" alt="Close" class="w-4 h-4 brightness-0 invert">
+                    </button>
+                </div>
+
+                <div class="p-6 md:p-10">
+                    <form id="form-profil" onsubmit="simpanProfil(event)">
+                        <div class="flex flex-col md:flex-row gap-8">
+                            <div class="w-full md:w-1/3 flex flex-col items-center">
+                                <div class="relative group mb-6">
+                                    <div class="absolute inset-0 bg-gradient-to-tr from-brand to-pink-500 rounded-full blur-md opacity-40 group-hover:opacity-60 transition-opacity"></div>
+                                    <img id="preview-foto-profil" src="https://ui-avatars.com/api/?name=User" class="relative w-40 h-40 rounded-full border-4 border-white shadow-xl object-cover">
+                                    <div class="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer border-4 border-transparent" onclick="document.getElementById('input-foto-profil').click()">
+                                        <img src="https://cdn-icons-png.flaticon.com/128/3004/3004613.png" alt="Camera" class="w-10 h-10 brightness-0 invert drop-shadow-md hover:scale-110 transition-transform">
+                                    </div>
+                                </div>
+                                <label class="cursor-pointer bg-slate-50 hover:bg-slate-100 text-slate-700 px-6 py-3 rounded-2xl text-sm font-bold transition-all w-full text-center border border-slate-200 shadow-sm hover:shadow-md flex items-center justify-center gap-2">
+                                    <img src="https://cdn-icons-png.flaticon.com/128/3342/3342137.png" alt="Gallery" class="w-5 h-5"> 
+                                    Pilih Foto Baru
+                                    <input type="file" id="input-foto-profil" class="hidden" accept="image/*" onchange="previewImage(this, 'preview-foto-profil')">
+                                </label>
+                                <p class="text-[10px] text-slate-400 mt-3 text-center font-medium tracking-wide uppercase">Format: JPG/PNG. Maks: 2MB.</p>
+                            </div>
+                            
+                            <div class="w-full md:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1">Username (Kunci)</label>
+                                    <input type="text" id="prof-username" readonly class="w-full p-3.5 bg-slate-100/80 border border-slate-200 rounded-2xl text-slate-500 cursor-not-allowed font-mono text-sm shadow-inner">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1">Password</label>
+                                    <input type="password" id="prof-password" required class="w-full p-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-2 focus:ring-brand focus:border-transparent outline-none text-sm transition-all shadow-sm">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1">Nama Lengkap & Gelar</label>
+                                    <input type="text" id="prof-nama" required class="w-full p-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-2 focus:ring-brand focus:border-transparent outline-none text-sm transition-all shadow-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1">NIP / NUPTK</label>
+                                    <input type="text" id="prof-nip" class="w-full p-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-2 focus:ring-brand focus:border-transparent outline-none text-sm transition-all shadow-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1">Pendidikan Terakhir</label>
+                                    <input type="text" id="prof-pendidikan" class="w-full p-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-2 focus:ring-brand focus:border-transparent outline-none text-sm transition-all shadow-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1">Tempat Lahir</label>
+                                    <input type="text" id="prof-tempat-lahir" class="w-full p-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-2 focus:ring-brand focus:border-transparent outline-none text-sm transition-all shadow-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1">Tanggal Lahir</label>
+                                    <input type="date" id="prof-tgl-lahir" class="w-full p-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-2 focus:ring-brand focus:border-transparent outline-none text-sm transition-all shadow-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1">Jenis Kelamin</label>
+                                    <select id="prof-jk" class="w-full p-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-2 focus:ring-brand focus:border-transparent outline-none text-sm transition-all shadow-sm">
+                                        <option value="Laki-laki">Laki-laki</option>
+                                        <option value="Perempuan">Perempuan</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1">Agama</label>
+                                    <input type="text" id="prof-agama" class="w-full p-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-2 focus:ring-brand focus:border-transparent outline-none text-sm transition-all shadow-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1">No. WhatsApp</label>
+                                    <input type="text" id="prof-wa" class="w-full p-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-2 focus:ring-brand focus:border-transparent outline-none text-sm transition-all shadow-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1">Email</label>
+                                    <input type="email" id="prof-email" class="w-full p-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-2 focus:ring-brand focus:border-transparent outline-none text-sm transition-all shadow-sm">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1">Alamat Lengkap</label>
+                                    <textarea id="prof-alamat" rows="2" class="w-full p-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-2 focus:ring-brand focus:border-transparent outline-none text-sm transition-all shadow-sm"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-10 border-t border-slate-100 pt-6 flex justify-end gap-3">
+                            <button type="button" onclick="closeModal('modal-profil')" class="px-6 py-3.5 rounded-2xl font-bold text-slate-500 hover:bg-slate-100 transition-colors">Batalkan</button>
+                            <button type="submit" class="px-8 py-3.5 rounded-2xl font-bold bg-gradient-to-r from-brand to-pink-500 hover:from-brand-dark hover:to-pink-600 text-white shadow-[0_10px_20px_-5px_rgba(139,92,246,0.4)] hover:-translate-y-1 transition-all flex items-center gap-2">
+                                <img src="https://cdn-icons-png.flaticon.com/128/2681/2681062.png" alt="Save" class="w-4 h-4 brightness-0 invert">
+                                Simpan Profil
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-upload-media" class="fixed inset-0 z-[70] hidden bg-slate-900/60 backdrop-blur-md overflow-y-auto" onclick="if(event.target===this) closeModal('modal-upload-media')">
+        <div class="min-h-screen flex items-center justify-center p-4">
+            <div class="bg-white/95 backdrop-blur-2xl rounded-[2.5rem] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] border border-white/60 w-full max-w-xl relative overflow-hidden fade-in">
+                
+                <div class="bg-gradient-to-r from-brand-dark via-brand to-pink-500 p-6 md:p-8 text-white flex justify-between items-center relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
+                    <div class="relative z-10 flex items-center gap-3">
+                        <img src="https://cdn-icons-png.flaticon.com/128/3134/3134070.png" alt="Upload" class="w-8 h-8 md:w-10 md:h-10 brightness-0 invert drop-shadow-sm">
+                        <h2 class="text-xl md:text-2xl font-black drop-shadow-sm tracking-tight">Upload Media RPLBK</h2>
+                    </div>
+                    <button type="button" onclick="closeModal('modal-upload-media')" class="relative z-10 w-10 h-10 flex items-center justify-center bg-white/20 hover:bg-white/40 rounded-full transition-all hover:rotate-90 hover:scale-110 shadow-sm border border-white/30">
+                        <img src="https://cdn-icons-png.flaticon.com/128/1828/1828778.png" alt="Close" class="w-4 h-4 brightness-0 invert">
+                    </button>
+                </div>
+
+                <form id="form-media" onsubmit="submitMedia(event)" class="p-8 space-y-6">
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1">Judul Media/RPLBK</label>
+                        <input type="text" id="media-judul" required class="w-full p-4 bg-white border border-slate-200 rounded-2xl focus:ring-2 focus:ring-brand focus:border-transparent outline-none text-sm shadow-sm transition-all" placeholder="Contoh: Bahaya Bullying di Sekolah">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1">Deskripsi Singkat</label>
+                        <textarea id="media-deskripsi" required rows="2" class="w-full p-4 bg-white border border-slate-200 rounded-2xl focus:ring-2 focus:ring-brand focus:border-transparent outline-none text-sm shadow-sm transition-all" placeholder="Isi ringkasan materi..."></textarea>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="border-2 border-dashed border-slate-200 rounded-3xl p-5 text-center hover:bg-brand/5 hover:border-brand transition-all duration-300 group relative cursor-pointer" onclick="document.getElementById('media-file-kover').click()">
+                            <img src="https://cdn-icons-png.flaticon.com/128/3342/3342137.png" alt="Image" class="w-10 h-10 mx-auto mb-3 opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all">
+                            <p class="text-[11px] font-black text-slate-700 mb-1">Upload Kover</p>
+                            <p class="text-[9px] text-slate-400 font-medium" id="label-kover">Pilih File (JPG/PNG)</p>
+                            <input type="file" id="media-file-kover" required accept="image/*" class="hidden" onchange="document.getElementById('label-kover').innerText = this.files[0].name">
+                        </div>
+                        <div class="border-2 border-dashed border-slate-200 rounded-3xl p-5 text-center hover:bg-red-50 hover:border-red-400 transition-all duration-300 group relative cursor-pointer" onclick="document.getElementById('media-file-dokumen').click()">
+                            <img src="https://cdn-icons-png.flaticon.com/128/3143/3143460.png" alt="PDF" class="w-10 h-10 mx-auto mb-3 opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all">
+                            <p class="text-[11px] font-black text-slate-700 mb-1">Upload Materi</p>
+                            <p class="text-[9px] text-slate-400 font-medium" id="label-dokumen">Pilih File (PDF/PPT)</p>
+                            <input type="file" id="media-file-dokumen" required accept=".pdf,.doc,.docx,.ppt,.pptx" class="hidden" onchange="document.getElementById('label-dokumen').innerText = this.files[0].name">
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full py-4 mt-2 rounded-2xl font-bold bg-gradient-to-r from-brand to-pink-500 hover:from-brand-dark hover:to-pink-600 text-white shadow-[0_10px_20px_-5px_rgba(139,92,246,0.4)] hover:-translate-y-1 transition-all flex items-center justify-center gap-2">
+                        <img src="https://cdn-icons-png.flaticon.com/128/3134/3134070.png" alt="Upload" class="w-5 h-5 brightness-0 invert">
+                        Mulai Upload ke Drive
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-tambah-video" class="fixed inset-0 z-[70] hidden bg-slate-900/60 backdrop-blur-md overflow-y-auto" onclick="if(event.target===this) closeModal('modal-tambah-video')">
+        <div class="min-h-screen flex items-center justify-center p-4">
+            <div class="bg-white/95 backdrop-blur-2xl rounded-[2.5rem] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] border border-white/60 w-full max-w-md relative overflow-hidden fade-in">
+                
+                <div class="bg-gradient-to-br from-red-500 to-red-700 p-6 md:p-8 text-white flex justify-between items-center relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
+                    <div class="relative z-10 flex items-center gap-3">
+                        <img src="https://cdn-icons-png.flaticon.com/128/1384/1384060.png" alt="YouTube" class="w-8 h-8 md:w-10 md:h-10 brightness-0 invert drop-shadow-sm">
+                        <h2 class="text-xl md:text-2xl font-black drop-shadow-sm tracking-tight">Tambah Video Ajar</h2>
+                    </div>
+                    <button type="button" onclick="closeModal('modal-tambah-video')" class="relative z-10 w-10 h-10 flex items-center justify-center bg-white/20 hover:bg-white/40 rounded-full transition-all hover:rotate-90 hover:scale-110 shadow-sm border border-white/30">
+                        <img src="https://cdn-icons-png.flaticon.com/128/1828/1828778.png" alt="Close" class="w-4 h-4 brightness-0 invert">
+                    </button>
+                </div>
+
+                <form id="form-video" onsubmit="submitVideo(event)" class="p-8 space-y-6">
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1">Judul Video</label>
+                        <input type="text" id="vid-judul" required class="w-full p-4 bg-white border border-slate-200 rounded-2xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none text-sm shadow-sm transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1">Deskripsi Singkat</label>
+                        <textarea id="vid-deskripsi" required rows="2" class="w-full p-4 bg-white border border-slate-200 rounded-2xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none text-sm shadow-sm transition-all"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1">Link YouTube</label>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <img src="https://cdn-icons-png.flaticon.com/128/3670/3670147.png" alt="Link" class="w-4 h-4 opacity-40 group-focus-within:opacity-100 transition-opacity">
+                            </div>
+                            <input type="url" id="vid-url" required placeholder="https://youtube.com/watch?v=..." class="w-full pl-11 pr-4 py-4 bg-white border border-slate-200 rounded-2xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none text-sm shadow-sm transition-all">
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full py-4 mt-2 rounded-2xl font-bold bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white shadow-[0_10px_20px_-5px_rgba(239,68,68,0.4)] hover:-translate-y-1 transition-all flex items-center justify-center gap-2">
+                        <img src="https://cdn-icons-png.flaticon.com/128/3670/3670147.png" alt="Save" class="w-5 h-5 brightness-0 invert">
+                        Simpan Link Video
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL TENTANG APLIKASI -->
+    <!-- ========================================== -->
+    <div id="about-modal" class="fixed inset-0 z-[90] hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md" onclick="if(event.target===this) closeModal('about-modal')">
+        <div class="bg-white/90 backdrop-blur-2xl rounded-[2.5rem] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] border border-white/60 w-full max-w-lg relative z-10 overflow-hidden fade-in text-center">
+            
+            <div class="relative bg-gradient-to-br from-brand-dark via-brand to-pink-500 p-10 text-white overflow-hidden">
+                <div class="absolute top-0 right-0 w-40 h-40 bg-white/20 rounded-full blur-3xl -mr-10 -mt-10"></div>
+                
+                <img src="https://lh3.googleusercontent.com/u/0/d/1Wr_uC9C32tjzN19PZXLsk3tyBNrzO1wy" alt="Rocket" class="w-30 h-20 mx-auto mb-4 drop-shadow-[0_10px_10px_rgba(0,0,0,0.3)] hover:scale-110 transition-transform duration-500">
+                
+                <h2 class="text-3xl font-black drop-shadow-sm">RUANG BK</h2>
+                <p class="text-[10px] text-white/90 mt-1 font-bold tracking-[0.2em] uppercase">UPT SPF SMP NEGERI 11 MAKASSAR</p>
+            </div>
+            
+            <div class="p-8 space-y-6">
+                <p class="text-slate-500 text-sm leading-relaxed font-medium">Platform Ruang Kerja Digital yang dirancang khusus dengan antarmuka elegan untuk mempermudah tugas Guru BK dalam satu pintu. Cerdas, Cepat, dan Responsif.</p>
+                
+                <div class="bg-slate-50/80 p-5 rounded-3xl border border-slate-100 shadow-inner flex flex-col items-center justify-center group hover:bg-white transition-colors">
+                    <p class="text-[10px] text-slate-400 uppercase tracking-widest font-extrabold mb-2">Dirancang Oleh</p>
+                    <div class="flex items-center justify-center gap-2">
+                        <img src="https://cdn-icons-png.flaticon.com/128/1005/1005141.png" alt="Code" class="w-5 h-5 opacity-70 group-hover:opacity-100 transition-opacity">
+                        <p class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-brand to-pink-500 drop-shadow-sm">Muhammad Hasratul</p>
+                    </div>
+                </div>
+                
+                <button onclick="closeModal('about-modal')" class="px-10 py-3.5 bg-slate-800 text-white rounded-2xl font-bold text-sm shadow-[0_10px_20px_-5px_rgba(30,41,59,0.4)] hover:bg-slate-900 hover:shadow-[0_15px_25px_-5px_rgba(30,41,59,0.5)] hover:-translate-y-1 transition-all w-full">Tutup Jendela</button>
+            </div>
+        </div>
+    </div>
+	
+	<div id="ai-fab-container" class="fixed bottom-6 left-6 z-[200] flex flex-col items-start gap-3 fade-in" style="touch-action: none; user-select: none;">
+        <button id="ai-fab-main" class="w-14 h-14 bg-gradient-to-tr from-[#14F0D2] via-[#0D74CE] to-[#9925CB] rounded-full flex items-center justify-center shadow-[0_10px_30px_-5px_rgba(30,195,214,0.4)] border-2 border-white relative group cursor-move hover:scale-105 transition-transform duration-300">
+            <img src="https://cdn-icons-png.flaticon.com/128/14026/14026362.png" class="w-7 h-7 brightness-0 invert pointer-events-none drop-shadow-md" alt="Gemini">
+            <span class="absolute -top-1 -right-1 flex h-4 w-4 pointer-events-none">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-4 w-4 bg-pink-500 border-2 border-white"></span>
+            </span>
+        </button>
+    </div>
+
+    <div id="ai-window" class="hidden fixed bottom-24 left-6 w-[350px] h-[450px] min-w-[280px] min-h-[350px] max-w-[90vw] max-h-[80vh] bg-white rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.3)] border border-slate-200 z-[210] flex-col overflow-hidden fade-in" style="resize: both;">
+        <div id="ai-header" class="bg-gradient-to-r from-[#14F0D2] via-[#0D74CE] to-[#9925CB] p-3.5 flex justify-between items-center cursor-move touch-none relative">
+            <div class="absolute inset-0 bg-black/10"></div>
+            <div class="flex items-center gap-2 pointer-events-none relative z-10">
+                <img src="https://cdn-icons-png.flaticon.com/128/14026/14026362.png" class="w-5 h-5 brightness-0 invert drop-shadow-[0_2px_2px_rgba(0,0,0,0.3)]">
+                <span class="text-white font-black text-sm tracking-widest uppercase drop-shadow-[0_2px_2px_rgba(0,0,0,0.3)]">Sobat AI - Pro</span>
+            </div>
+            <div class="flex items-center gap-1 relative z-10">
+                <button onclick="hapusRiwayatAI()" class="text-white/80 hover:text-white hover:bg-white/20 p-1.5 rounded-lg transition-colors" title="Hapus Riwayat">
+                    <i class="fa-solid fa-trash-can text-xs"></i>
+                </button>
+                <button onclick="toggleAiChat()" class="text-white/80 hover:text-white hover:bg-white/20 p-1.5 rounded-lg transition-colors" title="Tutup Jendela">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div id="ai-chat-box" class="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50 text-sm leading-relaxed"></div>
+        
+        <div class="p-3 bg-white border-t border-slate-100 flex gap-2 relative z-10">
+            <input type="text" id="ai-input" onkeypress="if(event.key === 'Enter') kirimPesanAI()" class="flex-1 bg-slate-100 border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[#0D74CE] transition-all shadow-inner font-medium text-slate-700" placeholder="Tanya ke Sobat AI...">
+            <button onclick="kirimPesanAI()" class="bg-gradient-to-br from-[#0D74CE] to-[#9925CB] text-white w-11 h-11 rounded-xl flex items-center justify-center hover:shadow-[0_10px_20px_-5px_rgba(153,37,203,0.5)] hover:-translate-y-0.5 transition-all flex-shrink-0">
+                <i class="fa-solid fa-paper-plane text-xs"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- JAVASCRIPT REAL LOGIC -->
+    <!-- ========================================== -->
+    <script>
+        // MASUKKAN URL GOOGLE APPS SCRIPT DI SINI
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbzZ3kog6617WwXMyMzbp97c14Mh6QCcte9U9sJ5srMs837FO_czjVvv5axXLqsJsgWvqw/exec"; 
+        
+        let currentUser = {}; 
+
+        // Fungsi Super Cerdas: Mengubah URL Drive biasa menjadi format LH3 murni untuk gambar di Frontend
+        function extractLh3Url(url) {
+            if (!url) return 'https://via.placeholder.com/300x200?text=No+Image';
+            if (url.includes('lh3.googleusercontent.com')) return url; // Jika sudah lh3
+            
+            // Mencari ID unik Drive dari berbagai format link
+            let idMatch = url.match(/(?:id=|\/d\/)([a-zA-Z0-9_-]{25,})/);
+            if (idMatch && idMatch[1]) {
+                // Konversi langsung ke format LH3 dengan resolusi tinggi (=s0)
+                return `https://lh3.googleusercontent.com/d/${idMatch[1]}=s0`;
+            }
+            return url; // Kembalikan url asli jika bukan link drive
+        }
+
+        // Fungsi memperbarui Dashboard Stat
+        function updateStats(tipe, jumlah) {
+            const el = document.getElementById('stat-' + tipe);
+            if(el) el.innerText = jumlah;
+        }
+		
+		// Fungsi Super Cerdas: Sapaan Otomatis Sesuai Waktu
+        function setUcapanWaktu() {
+            const jam = new Date().getHours();
+            let ucapan = 'Selamat Pagi';
+            if (jam >= 10 && jam < 15) ucapan = 'Selamat Siang';
+            else if (jam >= 15 && jam < 18) ucapan = 'Selamat Sore';
+            else if (jam >= 18 || jam < 4) ucapan = 'Selamat Malam';
+            
+            const elUcapan = document.getElementById('ucapan-waktu');
+            if(elUcapan) elUcapan.innerText = ucapan;
+        }
+
+        // =====================================
+        // FUNGSI FETCH REAL KE BACKEND (GAS)
+        // =====================================
+        async function fetchAPI(action, payload = {}) {
+			if (GAS_URL === "URL_APPS_SCRIPT_SAHABAT_DISINI") {
+				Swal.fire('Oops!', 'URL Google Apps Script belum disetel.', 'warning');
+				return { status: "error" };
+			}
+			try {
+				// Swal.showLoading(); <-- BARIS INI KITA MATIKAN
+				const response = await fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: action, ...payload }) });
+				const result = await response.json();
+				// Swal.close(); <-- BARIS INI JUGA KITA MATIKAN
+				return result;
+			} catch (error) {
+				// Swal.close(); <-- DAN BARIS INI
+				Swal.fire('Koneksi Gagal', 'Pastikan jaringan stabil.', 'error');
+				return { status: "error" };
+			}
+		}
+
+        // =====================================
+        // LOGIKA LOGIN
+        // =====================================
+        async function handleLogin(event) {
+            event.preventDefault();
+            const user = document.getElementById("login-username").value;
+            const pass = document.getElementById("login-password").value;
+
+            Swal.fire({ title: 'Tunggu Yah...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); }});
+
+            const res = await fetchAPI('login', { username: user, password: pass });
+            if(res.status === "error" && GAS_URL === "URL_APPS_SCRIPT_SAHABAT_DISINI") { simulasiLogin(user); return; }
+
+            if (res.status === "success") { simulasiLogin(user, res.data); } 
+            else { Swal.fire('Gagal', res.pesan || 'Username atau Password salah.', 'error'); }
+        }
+
+        function simulasiLogin(username, realData = null) {
+            Swal.fire({ title: 'Login Berhasil!', icon: 'success', timer: 1500, showConfirmButton: false, customClass: { popup: 'rounded-3xl' } });
+            
+            currentUser = realData || { username: username, nama_lengkap: username };
+            
+            // --- KODE BARU: Simpan data ke localStorage ---
+            localStorage.setItem('sobat_bk_user', JSON.stringify(currentUser));
+            
+            setUcapanWaktu();
+            
+            // Update UI dengan foto berformat LH3
+            let finalAvatarUrl = extractLh3Url(currentUser.url_foto_profil);
+            if(!currentUser.url_foto_profil) finalAvatarUrl = `https://ui-avatars.com/api/?name=${currentUser.nama_lengkap}&background=8b5cf6&color=fff`;
+            
+            document.getElementById("user-display-name").innerText = currentUser.nama_lengkap;
+            document.getElementById("banner-name").innerText = currentUser.nama_lengkap.split(' ')[0]; // Ambil nama panggilan
+            document.getElementById("user-avatar").src = finalAvatarUrl;
+            
+            document.getElementById("login-view").classList.add("hidden");
+            document.getElementById("main-dashboard").classList.remove("hidden");
+            
+            // Load Semua Data Awal
+            loadDataAplikasi();
+            loadDataMedia();
+            loadDataVideo();
+        }
+
+        function logout() {
+            Swal.fire({ title: 'Keluar?', text: "Sesi Anda akan diakhiri.", icon: 'question', showCancelButton: true, confirmButtonColor: '#8b5cf6', confirmButtonText: 'Ya', customClass: { popup: 'rounded-3xl' } })
+            .then((res) => {
+                if (res.isConfirmed) {
+                    currentUser = {};
+                    
+                    // --- KODE BARU: Hapus data dari localStorage ---
+                    localStorage.removeItem('sobat_bk_user');
+                    
+                    document.getElementById("login-form").reset();
+                    document.getElementById("main-dashboard").classList.add("hidden");
+                    document.getElementById("login-view").classList.remove("hidden");
+                }
+            });
+        }
+
+        // --- KODE BARU: Pengecekan Login Otomatis saat aplikasi dimuat ---
+        document.addEventListener("DOMContentLoaded", () => {
+            const savedUser = localStorage.getItem('sobat_bk_user');
+            if (savedUser) {
+                // Jika ada data tersimpan, langsung masuk tanpa animasi SweetAlert
+                currentUser = JSON.parse(savedUser);
+                
+                setUcapanWaktu();
+                
+                let finalAvatarUrl = extractLh3Url(currentUser.url_foto_profil);
+                if(!currentUser.url_foto_profil) finalAvatarUrl = `https://ui-avatars.com/api/?name=${currentUser.nama_lengkap}&background=8b5cf6&color=fff`;
+                
+                document.getElementById("user-display-name").innerText = currentUser.nama_lengkap;
+                document.getElementById("banner-name").innerText = currentUser.nama_lengkap.split(' ')[0];
+                document.getElementById("user-avatar").src = finalAvatarUrl;
+                
+                document.getElementById("login-view").classList.add("hidden");
+                document.getElementById("main-dashboard").classList.remove("hidden");
+                
+                loadDataAplikasi();
+                loadDataMedia();
+                loadDataVideo();
+            }
+        });
+
+        // =====================================
+        // MANAJEMEN TAB & KONTEN (MODERN PILLS)
+        // =====================================
+        function switchTab(tabName) {
+            ['aplikasi', 'media', 'video'].forEach(t => {
+                let btn = document.getElementById('tab-' + t);
+                btn.classList.remove('tab-active');
+                btn.classList.add('tab-inactive');
+                document.getElementById('content-' + t).classList.add('hidden');
+            });
+            let actBtn = document.getElementById('tab-' + tabName);
+            actBtn.classList.remove('tab-inactive');
+            actBtn.classList.add('tab-active');
+            document.getElementById('content-' + tabName).classList.remove('hidden');
+
+            if (tabName === 'aplikasi') loadDataAplikasi();
+            if (tabName === 'media') loadDataMedia();
+            if (tabName === 'video') loadDataVideo();
+        }
+
+        // =====================================
+        // RENDER DATA & MODAL DETAIL
+        // =====================================
+        
+        // Membuka Modal Detail Aplikasi (Pop-up sebelum dibuka di Iframe)
+        function openDetailApp(el) {
+            let url = el.getAttribute('data-url');
+            let title = el.getAttribute('data-title');
+            let desc = decodeURIComponent(el.getAttribute('data-desc'));
+            let iconHtml = decodeURIComponent(el.getAttribute('data-icon'));
+            
+            document.getElementById('detail-title').innerText = title;
+            document.getElementById('detail-desc').innerText = desc;
+            
+            // Manipulasi kelas agar ikon terlihat besar dan proporsional di dalam modal
+            let imgContainer = document.getElementById('detail-img-container');
+            imgContainer.innerHTML = iconHtml;
+            
+            let divIcon = imgContainer.querySelector('div');
+            if(divIcon) { divIcon.className = "w-24 h-24 bg-brand-light/20 text-brand rounded-3xl flex items-center justify-center mx-auto text-4xl shadow-inner"; }
+            let imgIcon = imgContainer.querySelector('img');
+            if(imgIcon) { imgIcon.className = "w-24 h-24 object-contain mx-auto drop-shadow-md"; }
+
+            let btnOpen = document.getElementById('btn-open-detail');
+            btnOpen.innerHTML = '<img src="https://cdn-icons-png.flaticon.com/128/3388/3388836.png" class="w-4 h-4 brightness-0 invert"> Buka Aplikasi';
+            btnOpen.onclick = () => { closeModal('modal-detail'); bukaIframe(url, title); };
+            
+            showModal('modal-detail');
+        }
+
+        async function loadDataAplikasi() {
+            const grid = document.getElementById("grid-aplikasi");
+            grid.innerHTML = Array(5).fill(`
+				<div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 animate-pulse flex flex-col items-center">
+					<div class="w-14 h-14 bg-slate-200 rounded-2xl mb-3"></div>
+					<div class="h-4 bg-slate-200 rounded w-3/4 mb-2"></div>
+					<div class="h-3 bg-slate-200 rounded w-full mb-1"></div>
+					<div class="h-3 bg-slate-200 rounded w-5/6"></div>
+				</div>
+			`).join('');
+            
+            const res = await fetchAPI('getAplikasi');
+            if(res.status === "success") {
+                grid.innerHTML = "";
+                updateStats('aplikasi', res.data.length);
+                res.data.forEach(app => {
+                    let finalIconUrl = extractLh3Url(app.url_ikon);
+                    let iconHtml = app.url_ikon.includes("http") ? `<img src="${finalIconUrl}" class="w-12 h-12 object-contain mx-auto mb-3 drop-shadow-sm">` : `<div class="w-14 h-14 bg-brand-light/20 text-brand rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl shadow-inner"><i class="${app.url_ikon}"></i></div>`;
+                    let appTitleSafe = app.nama_aplikasi.replace(/'/g, "\\'");
+                    
+                    // Konfigurasi Klik dengan pop-up (Modal Detail)
+                    let btnClick = `onclick="openDetailApp(this)" data-url="${app.url_aplikasi}" data-title="${appTitleSafe}" data-desc="${encodeURIComponent(app.deskripsi)}" data-icon="${encodeURIComponent(iconHtml)}"`;
+
+                    grid.innerHTML += `
+                        <div ${btnClick} class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1.5 hover:border-brand-light transition-all cursor-pointer text-center group">
+                            ${iconHtml}
+                            <h3 class="font-bold text-slate-800 text-sm group-hover:text-brand transition-colors line-clamp-1">${app.nama_aplikasi}</h3>
+                            <p class="text-[10px] text-slate-500 mt-2 line-clamp-2 leading-relaxed">${app.deskripsi}</p>
+                        </div>`;
+                });
+            } else { grid.innerHTML = '<div class="col-span-full text-center text-red-500 font-semibold">Gagal memuat atau Backend belum siap.</div>'; }
+        }
+
+        // Membuka Modal Detail Media Ajar (Pop-up sebelum dibuka di Iframe)
+        function openDetailMedia(el) {
+            let url = el.getAttribute('data-url');
+            let title = el.getAttribute('data-title');
+            let desc = decodeURIComponent(el.getAttribute('data-desc'));
+            let cover = el.getAttribute('data-cover');
+            
+            document.getElementById('detail-title').innerText = title;
+            document.getElementById('detail-desc').innerText = desc;
+            
+            let imgContainer = document.getElementById('detail-img-container');
+            imgContainer.innerHTML = `<img src="${cover}" class="w-40 h-32 object-cover rounded-2xl shadow-md border-4 border-white mx-auto">`;
+
+            let btnOpen = document.getElementById('btn-open-detail');
+            btnOpen.innerHTML = '<img src="https://cdn-icons-png.flaticon.com/128/3362/3362004.png" class="w-4 h-4 brightness-0 invert"> Buka Materi';
+            btnOpen.onclick = () => { closeModal('modal-detail'); bukaIframe(url, title); };
+            
+            showModal('modal-detail');
+        }
+
+        async function loadDataMedia() {
+            const grid = document.getElementById("grid-media");
+            grid.innerHTML = Array(4).fill(`
+				<div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden animate-pulse flex flex-col h-full">
+					<div class="w-full h-44 bg-slate-200"></div>
+					<div class="p-5 flex flex-col flex-1">
+						<div class="h-4 bg-slate-200 rounded w-full mb-2"></div>
+						<div class="h-3 bg-slate-200 rounded w-4/5 mb-4"></div>
+						<div class="mt-auto pt-4"><div class="h-4 bg-slate-200 rounded w-1/3"></div></div>
+					</div>
+				</div>
+			`).join('');
+            
+            const res = await fetchAPI('getMedia');
+            if(res.status === "success") {
+                grid.innerHTML = "";
+                updateStats('media', res.data.length);
+                res.data.forEach(m => {
+                    let titleSafe = m.nama_rplbk.replace(/'/g, "\\'");
+                    let finalCoverUrl = extractLh3Url(m.url_cover);
+                    
+                    // Tambahkan event.preventDefault() agar klik kiri tetap fokus buka modal
+					let btnClick = `onclick="event.preventDefault(); openDetailMedia(this)" data-url="${m.url_media}" data-title="${titleSafe}" data-desc="${encodeURIComponent(m.deskripsi)}" data-cover="${finalCoverUrl}"`;
+
+					// Ubah tag pembungkus dari <div ...> menjadi <a href="...">
+					grid.innerHTML += `
+						<a href="${m.url_media}" target="_blank" ${btnClick} class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-xl transition-all group flex flex-col h-full cursor-pointer block text-left">
+							<div class="relative overflow-hidden">
+								<img src="${finalCoverUrl}" class="w-full h-44 object-cover bg-slate-100 group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://via.placeholder.com/300x200?text=No+Cover'">
+								<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60 transition-opacity group-hover:opacity-80"></div>
+								<div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+									<div class="bg-white/90 text-brand px-4 py-2 rounded-full font-bold text-xs shadow-lg"><i class="fa-solid fa-eye mr-1"></i> Detail</div>
+								</div>
+							</div>
+							<div class="p-5 flex flex-col flex-1">
+								<h3 class="font-bold text-slate-800 line-clamp-1 text-sm md:text-base group-hover:text-brand transition-colors" title="${m.nama_rplbk}">${m.nama_rplbk}</h3>
+								<p class="text-[11px] text-slate-500 mt-2 line-clamp-2 leading-relaxed flex-1">${m.deskripsi}</p>
+								<div class="mt-4 flex justify-between items-center border-t border-slate-100 pt-4">
+									<span class="text-[10px] font-semibold text-slate-400 bg-slate-100 px-2 py-1 rounded-md"><i class="fa-solid fa-user-pen mr-1"></i>${m.diupload_oleh.split(' ')[0]}</span>
+								</div>
+							</div>
+						</a>`;
+                });
+            } else { grid.innerHTML = '<div class="col-span-full text-center text-slate-400 font-semibold">Belum ada media. Klik Upload Baru untuk menambah data.</div>'; }
+        }
+
+        // --- RENDER VIDEO (Tetap langsung diputar tanpa detail pop-up) ---
+        async function loadDataVideo() {
+			const grid = document.getElementById("grid-video");
+			
+			// Skeleton loading (tetap dipertahankan agar elegan)
+			grid.innerHTML = Array(4).fill(`
+				<div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden animate-pulse flex flex-col h-full">
+					<div class="w-full h-44 bg-slate-200"></div>
+					<div class="p-5 flex flex-col flex-1">
+						<div class="h-4 bg-slate-200 rounded w-full mb-2"></div>
+						<div class="h-3 bg-slate-200 rounded w-3/4 mb-4"></div>
+						<div class="mt-auto pt-3"><div class="h-4 bg-slate-200 rounded w-1/4"></div></div>
+					</div>
+				</div>
+			`).join('');
+
+			const res = await fetchAPI('getVideo');
+			if(res.status === "success") {
+				grid.innerHTML = "";
+				updateStats('video', res.data.length);
+				res.data.forEach(v => {
+					// Mengambil ID Video YouTube
+					let vidId = v.url_youtube.split('v=')[1] || v.url_youtube.split('/')[3];
+					let ampersandPosition = vidId ? vidId.indexOf('&') : -1;
+					if(ampersandPosition != -1) vidId = vidId.substring(0, ampersandPosition);
+					
+					// Format URL khusus untuk Iframe (tanpa autoplay agar tidak ribut terputar semua)
+					let embedUrl = `https://www.youtube.com/embed/${vidId}`;
+					let titleSafe = v.judul_video.replace(/'/g, "\\'");
+
+					grid.innerHTML += `
+						<div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-xl transition-all group flex flex-col h-full">
+							<div class="relative w-full h-44 bg-slate-100">
+								<iframe class="w-full h-full" src="${embedUrl}" title="${titleSafe}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+							</div>
+							
+							<div class="p-5 flex flex-col flex-1">
+								<h3 class="font-bold text-slate-800 line-clamp-2 text-sm leading-snug flex-1" title="${v.judul_video}">${v.judul_video}</h3>
+								<div class="mt-3 border-t border-slate-100 pt-3">
+									<p class="text-[10px] font-semibold text-slate-400 bg-slate-50 inline-block px-2 py-1 rounded-md"><i class="fa-solid fa-clapperboard mr-1"></i>${v.ditambahkan_oleh}</p>
+								</div>
+							</div>
+						</div>`;
+				});
+			} else { 
+				grid.innerHTML = '<div class="col-span-full text-center text-slate-400 font-semibold">Belum ada video ditambahkan.</div>'; 
+			}
+		}
+
+        // =====================================
+        // MANAJEMEN MODAL UMUM & IFRAME
+        // =====================================
+        function showModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+        function bukaIframe(url, title) {
+            document.getElementById("iframe-title").innerText = title;
+            document.getElementById("main-iframe").src = url;
+            document.getElementById("main-iframe").style.opacity = "0";
+            document.getElementById("iframe-loader").classList.remove("hidden");
+            document.getElementById("iframe-view").classList.remove("hidden");
+        }
+
+        function tutupIframe() {
+            document.getElementById("main-iframe").src = "";
+            document.getElementById("iframe-view").classList.add("hidden");
+        }
+
+        function togglePassword(inputId, iconId) {
+            const inp = document.getElementById(inputId);
+            const ico = document.getElementById(iconId);
+            
+            // Link ikon mata terbuka dan tertutup (URL murni)
+            const eyeOpen = "https://cdn-icons-png.flaticon.com/128/2767/2767146.png";
+            const eyeClosed = "https://cdn-icons-png.flaticon.com/128/709/709612.png";
+
+            if (inp.type === "password") {
+                inp.type = "text";
+                ico.src = eyeClosed; // Ganti ke ikon mata tertutup/coret
+            } else {
+                inp.type = "password";
+                ico.src = eyeOpen; // Kembali ke mata terbuka
+            }
+        }
+
+        function previewImage(input, imgId) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) { document.getElementById(imgId).src = e.target.result; }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        const getBase64 = (file) => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result.split(',')[1]);
+            reader.onerror = error => reject(error);
+        });
+
+        // =====================================
+        // AKSI FORM REAL (PROFIL, MEDIA, VIDEO)
+        // =====================================
+        async function showProfil() {
+            document.getElementById('prof-username').value = currentUser.username || '';
+            document.getElementById('prof-password').value = currentUser.password || '';
+            document.getElementById('prof-nama').value = currentUser.nama_lengkap || '';
+            document.getElementById('prof-nip').value = currentUser.nip_nuptk || '';
+            document.getElementById('prof-pendidikan').value = currentUser.pendidikan_terakhir || '';
+            document.getElementById('prof-tempat-lahir').value = currentUser.tempat_lahir || '';
+            document.getElementById('prof-tgl-lahir').value = currentUser.tanggal_lahir ? currentUser.tanggal_lahir.split('T')[0] : '';
+            if(currentUser.jenis_kelamin) document.getElementById('prof-jk').value = currentUser.jenis_kelamin;
+            document.getElementById('prof-agama').value = currentUser.agama || '';
+            document.getElementById('prof-wa').value = currentUser.no_wa || '';
+            document.getElementById('prof-email').value = currentUser.email || '';
+            document.getElementById('prof-alamat').value = currentUser.alamat_lengkap || '';
+            
+            let profAvatarUrl = extractLh3Url(currentUser.url_foto_profil);
+            document.getElementById('preview-foto-profil').src = profAvatarUrl || `https://ui-avatars.com/api/?name=${currentUser.nama_lengkap}`;
+            showModal('modal-profil');
+        }
+
+        async function simpanProfil(e) {
+            e.preventDefault();
+            Swal.fire({ title: 'Menyimpan Profil...', didOpen: () => { Swal.showLoading(); }});
+            
+            let payload = {
+                username: document.getElementById('prof-username').value,
+                password: document.getElementById('prof-password').value,
+                nama_lengkap: document.getElementById('prof-nama').value,
+                nip_nuptk: document.getElementById('prof-nip').value,
+                pendidikan_terakhir: document.getElementById('prof-pendidikan').value,
+                tempat_lahir: document.getElementById('prof-tempat-lahir').value,
+                tanggal_lahir: document.getElementById('prof-tgl-lahir').value,
+                jenis_kelamin: document.getElementById('prof-jk').value,
+                agama: document.getElementById('prof-agama').value,
+                no_wa: document.getElementById('prof-wa').value,
+                email: document.getElementById('prof-email').value,
+                alamat_lengkap: document.getElementById('prof-alamat').value,
+            };
+
+            const fileFoto = document.getElementById('input-foto-profil').files[0];
+            if(fileFoto) {
+                payload.fotoBase64 = await getBase64(fileFoto);
+                payload.fotoMimeType = fileFoto.type;
+                payload.fotoNamaFile = "Profil_" + payload.username;
+            }
+
+            const res = await fetchAPI('updateProfil', payload);
+            if(res.status === "success" || GAS_URL === "URL_APPS_SCRIPT_SAHABAT_DISINI") {
+                Swal.fire('Berhasil', 'Profil berhasil diperbarui!', 'success');
+                closeModal('modal-profil');
+                
+                currentUser = { ...currentUser, ...payload }; 
+                if(fileFoto) { 
+                    const reader = new FileReader();
+                    reader.onload = function(e) { currentUser.url_foto_profil = e.target.result; document.getElementById('user-avatar').src = e.target.result; }
+                    reader.readAsDataURL(fileFoto);
+                }
+                document.getElementById('user-display-name').innerText = payload.nama_lengkap;
+                document.getElementById('banner-name').innerText = payload.nama_lengkap.split(' ')[0];
+            } else { Swal.fire('Gagal', res.pesan || 'Terjadi kesalahan.', 'error'); }
+        }
+
+        async function submitMedia(e) {
+            e.preventDefault();
+            const fileKover = document.getElementById('media-file-kover').files[0];
+            const fileDokumen = document.getElementById('media-file-dokumen').files[0];
+            
+            if(!fileKover || !fileDokumen) { Swal.fire('Error', 'Lengkapi file kover dan materi!', 'error'); return; }
+
+            Swal.fire({ title: 'Mengunggah ke Drive...', text: 'Jangan tutup aplikasi.', didOpen: () => { Swal.showLoading(); }});
+
+            let payload = {
+                username_pengunggah: currentUser.username,
+                nama_rplbk: document.getElementById('media-judul').value,
+                deskripsi: document.getElementById('media-deskripsi').value,
+                koverBase64: await getBase64(fileKover),
+                koverMimeType: fileKover.type,
+                koverNamaFile: "Kover_" + fileKover.name,
+                mediaBase64: await getBase64(fileDokumen),
+                mediaMimeType: fileDokumen.type,
+                mediaNamaFile: "Materi_" + fileDokumen.name
+            };
+
+            const res = await fetchAPI('uploadMedia', payload);
+            if(res.status === "success" || GAS_URL === "URL_APPS_SCRIPT_SAHABAT_DISINI") {
+                Swal.fire('Berhasil', 'Media tersimpan di Drive!', 'success');
+                document.getElementById('form-media').reset();
+                document.getElementById('label-kover').innerText = "Pilih File (JPG/PNG)";
+                document.getElementById('label-dokumen').innerText = "Pilih File (PDF/PPT)";
+                closeModal('modal-upload-media');
+                loadDataMedia(); 
+            } else { Swal.fire('Gagal', res.pesan, 'error'); }
+        }
+
+        async function submitVideo(e) {
+            e.preventDefault();
+            Swal.fire({ title: 'Menyimpan Link Video...', didOpen: () => { Swal.showLoading(); }});
+            let payload = {
+                username_pengunggah: currentUser.username,
+                judul_video: document.getElementById('vid-judul').value,
+                deskripsi: document.getElementById('vid-deskripsi').value,
+                url_youtube: document.getElementById('vid-url').value
+            };
+            const res = await fetchAPI('tambahVideo', payload);
+            if(res.status === "success" || GAS_URL === "URL_APPS_SCRIPT_SAHABAT_DISINI") {
+                Swal.fire('Berhasil', 'Video ditambahkan!', 'success');
+                document.getElementById('form-video').reset();
+                closeModal('modal-tambah-video');
+                loadDataVideo(); 
+            } else { Swal.fire('Gagal', res.pesan, 'error'); }
+        }
+		
+		// Fungsi untuk Buka Tutup Tombol Melayang
+        let fabContainer = document.getElementById("fab-container");
+        let fabMain = document.getElementById("fab-main");
+        let isDragging = false;
+        let dragActive = false;
+        let startX, startY, initialX, initialY;
+
+        // FUNGSI BUKA MENU (Sangat Akurat)
+        function toggleFab(e) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
+            const menu = document.getElementById('fab-menu');
+            const icon = document.getElementById('fab-icon');
+            
+            if (menu.classList.contains('scale-0')) {
+                menu.classList.remove('scale-0', 'opacity-0', 'pointer-events-none');
+                menu.classList.add('scale-100', 'opacity-100', 'pointer-events-auto');
+                icon.style.transform = 'rotate(45deg)';
+            } else {
+                menu.classList.add('scale-0', 'opacity-0', 'pointer-events-none');
+                menu.classList.remove('scale-100', 'opacity-100', 'pointer-events-auto');
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // LOGIKA PINDAH TEMPAT (DRAG)
+        fabMain.addEventListener("touchstart", (e) => {
+            dragActive = true;
+            isDragging = false; // Reset di awal sentuhan
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+            initialX = fabContainer.offsetLeft;
+            initialY = fabContainer.offsetTop;
+            fabContainer.classList.add("dragging");
+        }, { passive: false });
+
+        document.addEventListener("touchmove", (e) => {
+            if (!dragActive) return;
+            
+            let dx = e.touches[0].clientX - startX;
+            let dy = e.touches[0].clientY - startY;
+
+            // Jika geser lebih dari 10px, tandai sebagai 'isDragging'
+            if (Math.abs(dx) > 10 || Math.abs(dy) > 10) {
+                isDragging = true;
+                e.preventDefault(); // Mencegah layar ikut tergulung saat geser tombol
+                
+                fabContainer.style.left = (initialX + dx) + "px";
+                fabContainer.style.top = (initialY + dy) + "px";
+                fabContainer.style.right = "auto";
+                fabContainer.style.bottom = "auto";
+            }
+        }, { passive: false });
+
+        document.addEventListener("touchend", (e) => {
+            if (!dragActive) return;
+            dragActive = false;
+            fabContainer.classList.remove("dragging");
+
+            // JIKA TIDAK DIGESER (HANYA DITAP), MAKA BUKA MENU
+            if (!isDragging) {
+                toggleFab(e);
+            }
+        });
+
+        // TETAP BERFUNGSI UNTUK MOUSE (LAPTOP)
+        fabMain.addEventListener("mousedown", (e) => {
+            dragActive = true;
+            isDragging = false;
+            startX = e.clientX;
+            startY = e.clientY;
+            initialX = fabContainer.offsetLeft;
+            initialY = fabContainer.offsetTop;
+        });
+
+        document.addEventListener("mousemove", (e) => {
+            if (!dragActive) return;
+            isDragging = true;
+            let dx = e.clientX - startX;
+            let dy = e.clientY - startY;
+            fabContainer.style.left = (initialX + dx) + "px";
+            fabContainer.style.top = (initialY + dy) + "px";
+            fabContainer.style.right = "auto";
+            fabContainer.style.bottom = "auto";
+        });
+
+        document.addEventListener("mouseup", (e) => {
+            if (!dragActive) return;
+            dragActive = false;
+            if (!isDragging) toggleFab(e);
+        });
+		
+		// =====================================
+        // LOGIKA SOBAT AI - PRO (COPY PASTE MESIN DARI TOMBOL KANAN)
+        // =====================================
+        let aiFabContainer = document.getElementById("ai-fab-container");
+        let aiFabMain = document.getElementById("ai-fab-main");
+        let isAiDragging = false;
+        let aiDragActive = false;
+        let aiStartX, aiStartY, aiInitialX, aiInitialY;
+
+        function toggleAiChat() {
+            let win = document.getElementById('ai-window');
+            if (win.classList.contains('hidden')) {
+                win.classList.remove('hidden'); win.classList.add('flex');
+                renderAIChat();
+            } else {
+                win.classList.add('hidden'); win.classList.remove('flex');
+            }
+        }
+
+        // --- DRAG SENTUHAN HP ---
+        aiFabMain.addEventListener("touchstart", (e) => {
+            aiDragActive = true;
+            isAiDragging = false;
+            aiStartX = e.touches[0].clientX;
+            aiStartY = e.touches[0].clientY;
+            aiInitialX = aiFabContainer.offsetLeft;
+            aiInitialY = aiFabContainer.offsetTop;
+            aiFabContainer.classList.add("dragging");
+        }, { passive: false });
+
+        document.addEventListener("touchmove", (e) => {
+            if (!aiDragActive) return;
+            let dx = e.touches[0].clientX - aiStartX;
+            let dy = e.touches[0].clientY - aiStartY;
+            if (Math.abs(dx) > 10 || Math.abs(dy) > 10) {
+                isAiDragging = true;
+                e.preventDefault();
+                aiFabContainer.style.left = (aiInitialX + dx) + "px";
+                aiFabContainer.style.top = (aiInitialY + dy) + "px";
+                aiFabContainer.style.right = "auto";
+                aiFabContainer.style.bottom = "auto";
+            }
+        }, { passive: false });
+
+        document.addEventListener("touchend", (e) => {
+            if (!aiDragActive) return;
+            aiDragActive = false;
+            aiFabContainer.classList.remove("dragging");
+            if (!isAiDragging) toggleAiChat(); // Buka chat jika hanya di-tap
+        });
+
+        // --- DRAG MOUSE LAPTOP ---
+        aiFabMain.addEventListener("mousedown", (e) => {
+            aiDragActive = true;
+            isAiDragging = false;
+            aiStartX = e.clientX;
+            aiStartY = e.clientY;
+            aiInitialX = aiFabContainer.offsetLeft;
+            aiInitialY = aiFabContainer.offsetTop;
+            aiFabContainer.classList.add("dragging");
+        });
+
+        document.addEventListener("mousemove", (e) => {
+            if (!aiDragActive) return;
+            isAiDragging = true;
+            let dx = e.clientX - aiStartX;
+            let dy = e.clientY - aiStartY;
+            aiFabContainer.style.left = (aiInitialX + dx) + "px";
+            aiFabContainer.style.top = (aiInitialY + dy) + "px";
+            aiFabContainer.style.right = "auto";
+            aiFabContainer.style.bottom = "auto";
+        });
+
+        document.addEventListener("mouseup", (e) => {
+            if (!aiDragActive) return;
+            aiDragActive = false;
+            aiFabContainer.classList.remove("dragging");
+            if (!isAiDragging) toggleAiChat(); // Buka chat jika hanya di-klik
+        });
+
+        // =====================================
+        // LOGIKA DRAG JENDELA CHAT AI
+        // =====================================
+        let aiWin = document.getElementById('ai-window');
+        let aiHeader = document.getElementById('ai-header');
+        let isAiWinDragging = false;
+        let startXAiWin, startYAiWin, initialXAiWin, initialYAiWin;
+
+        function startDragAiWin(e) {
+            if (e.target.closest('button')) return; // Abaikan jika mengklik tombol X / hapus
+            isAiWinDragging = true;
+            startXAiWin = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+            startYAiWin = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+            initialXAiWin = aiWin.offsetLeft;
+            initialYAiWin = aiWin.offsetTop;
+        }
+
+        function dragAiWinMove(e) {
+            if (!isAiWinDragging) return;
+            e.preventDefault();
+            let currentX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+            let currentY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+            aiWin.style.left = (initialXAiWin + (currentX - startXAiWin)) + 'px';
+            aiWin.style.top = (initialYAiWin + (currentY - startYAiWin)) + 'px';
+            aiWin.style.bottom = 'auto';
+            aiWin.style.right = 'auto';
+        }
+
+        function stopDragAiWin() { isAiWinDragging = false; }
+
+        aiHeader.addEventListener('mousedown', startDragAiWin);
+        document.addEventListener('mousemove', dragAiWinMove);
+        document.addEventListener('mouseup', stopDragAiWin);
+        aiHeader.addEventListener('touchstart', startDragAiWin, { passive: false });
+        document.addEventListener('touchmove', dragAiWinMove, { passive: false });
+        document.addEventListener('touchend', stopDragAiWin);
+
+        // =====================================
+        // LOGIKA CHAT & KONEKSI API
+        // =====================================
+        let riwayatAI = JSON.parse(localStorage.getItem('sobat_bk_ai_history')) || [];
+        const aiChatBox = document.getElementById('ai-chat-box');
+        const aiInput = document.getElementById('ai-input');
+
+        function formatTeksAI(teks) {
+            return teks.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+        }
+
+        function renderAIChat() {
+            aiChatBox.innerHTML = '';
+            if (riwayatAI.length === 0) {
+                aiChatBox.innerHTML = `
+                    <div class="flex flex-col mb-4 items-start">
+                        <div class="bg-white border border-slate-200 p-3.5 rounded-2xl rounded-tl-none self-start max-w-[85%] shadow-sm text-slate-700 font-medium">
+                            Halo Sahabat! Saya <b>Sobat AI - Pro</b>. Ada yang bisa saya bantu hari ini?
+                        </div>
+                    </div>`;
+                return;
+            }
+
+            riwayatAI.forEach(chat => {
+                let isUser = chat.role === "user";
+                let bubbleClass = isUser ? "bg-gradient-to-r from-[#0D74CE] to-[#9925CB] text-white rounded-tr-none self-end shadow-md" : "bg-white border border-slate-200 text-slate-700 rounded-tl-none self-start shadow-sm";
+                
+                aiChatBox.innerHTML += `
+                    <div class="flex flex-col mb-4 ${isUser ? 'items-end' : 'items-start'}">
+                        <div class="${bubbleClass} p-3.5 rounded-2xl max-w-[85%] leading-relaxed">
+                            ${formatTeksAI(chat.parts[0].text)}
+                        </div>
+                    </div>`;
+            });
+            aiChatBox.scrollTop = aiChatBox.scrollHeight;
+        }
+
+        async function kirimPesanAI() {
+            let teks = aiInput.value.trim();
+            if (!teks) return;
+
+            riwayatAI.push({ role: "user", parts: [{ text: teks }] });
+            aiInput.value = '';
+            renderAIChat();
+
+            let loadingId = "load-ai-" + Date.now();
+            aiChatBox.innerHTML += `
+                <div id="${loadingId}" class="flex flex-col mb-4 items-start">
+                    <div class="bg-white border border-slate-200 p-3.5 rounded-2xl rounded-tl-none self-start shadow-sm text-slate-400 text-xs font-semibold italic flex items-center gap-2">
+                        <i class="fa-solid fa-circle-notch fa-spin text-[#0D74CE]"></i> Sobat AI sedang berpikir...
+                    </div>
+                </div>`;
+            aiChatBox.scrollTop = aiChatBox.scrollHeight;
+
+            const res = await fetchAPI('chatGemini', { riwayat_chat: riwayatAI });
+            let elLoad = document.getElementById(loadingId);
+            if(elLoad) elLoad.remove();
+
+            if (res.status === "success") {
+                riwayatAI.push({ role: "model", parts: [{ text: res.balasan }] });
+            } else {
+                // PESAN ERROR SESUAI PERMINTAAN
+                riwayatAI.push({ role: "model", parts: [{ text: "Maaf Sahabat, sepertinya koneksi terganggu.<br><br><span class='text-red-500 font-bold'>Jika Sobat AI error silahkan menggunakan Gemini di browser.</span>" }] });
+            }
+
+            localStorage.setItem('sobat_bk_ai_history', JSON.stringify(riwayatAI));
+            renderAIChat();
+        }
+
+        function hapusRiwayatAI() {
+            Swal.fire({ title: 'Hapus Riwayat?', text: "Semua obrolan dengan Sobat AI akan hilang.", icon: 'warning', showCancelButton: true, confirmButtonColor: '#9925CB', confirmButtonText: 'Ya, Hapus!' })
+            .then((res) => {
+                if (res.isConfirmed) {
+                    riwayatAI = [];
+                    localStorage.removeItem('sobat_bk_ai_history');
+                    renderAIChat();
+                }
+            });
+        }
+		
+		// Fungsi Live Search Pintar
+		function filterPencarian() {
+			let input = document.getElementById('input-pencarian').value.toLowerCase();
+			
+			// Array dari semua ID grid yang kita punya
+			let grids = ['grid-aplikasi', 'grid-media', 'grid-video'];
+			
+			grids.forEach(gridId => {
+				let grid = document.getElementById(gridId);
+				if (grid) {
+					let items = grid.children;
+					Array.from(items).forEach(item => {
+						// Abaikan jika itu pesan error/loading (punya class col-span-full)
+						if (item.classList.contains('col-span-full')) return; 
+						
+						// Ambil semua teks yang ada di dalam card tersebut
+						let text = item.innerText.toLowerCase();
+						// Jika cocok tampilkan, jika tidak sembunyikan
+						item.style.display = text.includes(input) ? '' : 'none';
+					});
+				}
+			});
+		}
+
+    </script>
+	<script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                .then(reg => console.log('Service Worker terdaftar!', reg))
+                .catch(err => console.log('Service Worker gagal:', err));
+            });
+        }
+    </script>
+</body>
+</html>
